@@ -23,6 +23,7 @@
 // check that upload-related properties are defined and fail early if not
 // these properties ('s3AccessKey', etc) should be defined in
 // 'gradle.properties' in $HOME/.gradle/gradle.properties
+apply from: "$rootDir/buildSrc/preconditions.gradle"
 def requiredProps = version.releaseType == 'RELEASE' ? ['mavenSyncRepoDir'] : ['s3AccessKey', 's3SecretAccessKey']
 checkForProps(taskPath: project.path + ':uploadArchives', requiredProps: requiredProps)
 
