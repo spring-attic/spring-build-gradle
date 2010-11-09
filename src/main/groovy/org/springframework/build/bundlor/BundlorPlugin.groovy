@@ -95,7 +95,7 @@ public class BundlorPlugin implements Plugin<Project> {
                 // the bundlor ant task writes directly to standard out
                 // redirect it to INFO level logging, which gradle will
                 // deal with gracefully
-                project.logging.captureStandardOutput(LogLevel.INFO)
+                logging.captureStandardOutput(LogLevel.INFO)
 
                 // TODO tell the jar task to use bundlor manifest instead of the default
                 // and customize it with all common headers
