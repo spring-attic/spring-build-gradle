@@ -18,7 +18,7 @@ apply plugin: 'base'
 apply from: "$rootDir/buildSrc/docbook.gradle"
 apply from: "$rootDir/buildSrc/preconditions.gradle"
 
-description = "Spring Integration Documentation"
+description = "${rootProject.description} Documentation"
 
 task build(dependsOn: assemble) {
     group = 'Build'
@@ -49,7 +49,7 @@ task build(dependsOn: assemble) {
     options.links = ["http://static.springframework.org/spring/docs/3.0.x/javadoc-api"]
     options.overview = "${srcDir}/overview.html"
     options.docFilesSubDirs = true
-    title = "Spring Integration ${version} API"
+    title = "${rootProject.description} ${version} API"
 
     // collect all the sources that will be included in the javadoc output
     source javaprojects.collect {project ->
