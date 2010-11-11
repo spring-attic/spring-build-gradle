@@ -190,13 +190,13 @@ dependencies {
 checkForProps(taskPath: project.path + ':uploadArchives', requiredProps: ['sshHost', 'sshUsername', 'sshPrivateKey', 'remoteDocRoot'])
 
 uploadArchives {
-    def remoteSiteDir = remoteDocRoot + rootProject.name
-    def docUrl = "http://${sshHost}/${rootProject.name}/docs/${version}"
-    def remoteDocsDir = "${remoteSiteDir}/docs/"
+    def docsPath = "${rootProject.name}/docs"
+    def docsUrl = "http://${sshHost}/${docsPath}/${version}"
+    def remoteDocsDir = "${remoteDocRoot}/${docsPath}/"
     def fqRemoteDir = "${sshUsername}@${sshHost}:${remoteDocsDir}"
 
     group = 'Buildmaster'
-    description = "Uploads and unpacks documentation archive" + (sshHost ? " to ${docUrl}" : ": Host is not specified")
+    description = "Uploads and unpacks documentation archive" + (sshHost ? " to ${docsUrl}" : ": Host is not specified")
 
     uploadDescriptor = false
 
@@ -269,7 +269,7 @@ uploadArchives {
                 println "Creating latest-ga symlink: ${latestGASymlinkCommand}"
                 sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: latestGASymlinkCommand)
             }
-            println "UPLOAD SUCCESSFUL - validate by visiting ${docUrl}"
+            println "UPLOAD SUCCESSFUL - validate by visiting ${docsUrl}"
         }
     }
 }
