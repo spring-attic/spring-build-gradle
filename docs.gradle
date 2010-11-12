@@ -189,87 +189,90 @@ dependencies {
 
 checkForProps(taskPath: project.path + ':uploadArchives', requiredProps: ['sshHost', 'sshUsername', 'sshPrivateKey', 'remoteDocRoot'])
 
-uploadArchives {
-    def docsPath = "${rootProject.name}/docs"
-    def docsUrl = "http://${sshHost}/${docsPath}/${version}"
-    def remoteDocsDir = "${remoteDocRoot}/${docsPath}/"
-    def fqRemoteDir = "${sshUsername}@${sshHost}:${remoteDocsDir}"
+if (role == 'buildmaster') {
+    uploadArchives {
+        def docsPath = "${rootProject.name}/docs"
+        def docsUrl = "http://${sshHost}/${docsPath}/${version}"
+        def remoteDocsDir = "${remoteDocRoot}/${docsPath}/"
+        def fqRemoteDir = "${sshUsername}@${sshHost}:${remoteDocsDir}"
 
-    group = 'Buildmaster'
-    description = "Uploads and unpacks documentation archive" + (sshHost ? " to ${docsUrl}" : ": Host is not specified")
+        group = 'Buildmaster'
 
-    uploadDescriptor = false
+        description = "Uploads and unpacks documentation archive" + (sshHost ? " to ${docsUrl}" : ": Host is not specified")
 
-    repositories {
-        add(new org.apache.ivy.plugins.resolver.SshResolver()) {
-            name = 'sshHost: ' + sshHost // used for debugging
-            host = sshHost
-            user = sshUsername
-            if (project.hasProperty('sshPrivateKey')) {
-                keyFile = sshPrivateKey as File
+        uploadDescriptor = false
+
+        repositories {
+            add(new org.apache.ivy.plugins.resolver.SshResolver()) {
+                name = 'sshHost: ' + sshHost // used for debugging
+                host = sshHost
+                user = sshUsername
+                if (project.hasProperty('sshPrivateKey')) {
+                    keyFile = sshPrivateKey as File
+                }
+                addArtifactPattern "${remoteDocsDir}/${archive.archiveName}"
             }
-            addArtifactPattern "${remoteDocsDir}/${archive.archiveName}"
         }
-    }
 
-    configurations { scpAntTask }
-    dependencies { scpAntTask 'org.apache.ant:ant-jsch:1.8.1' }
+        configurations { scpAntTask }
+        dependencies { scpAntTask 'org.apache.ant:ant-jsch:1.8.1' }
 
-    doFirst {
-        println "Uploading: ${archive.archivePath} to ${fqRemoteDir}"
-    }
+        doFirst {
+            println "Uploading: ${archive.archivePath} to ${fqRemoteDir}"
+        }
 
-    doLast {
-        project.ant {
-            taskdef(name: 'sshexec',
-                    classname: 'org.apache.tools.ant.taskdefs.optional.ssh.SSHExec',
-                    classpath: configurations.scpAntTask.asPath)
+        doLast {
+            project.ant {
+                taskdef(name: 'sshexec',
+                        classname: 'org.apache.tools.ant.taskdefs.optional.ssh.SSHExec',
+                        classpath: configurations.scpAntTask.asPath)
 
-            // copy the archive, unpack it, then delete it
-            def unpackCommand = """
-                cd ${remoteDocsDir} &&
-                rm -rf ${version} &&
-                unzip -qKo ${archive.archiveName} &&
-                rm ${archive.archiveName}
-            """
+                // copy the archive, unpack it, then delete it
+                def unpackCommand = """
+                    cd ${remoteDocsDir} &&
+                    rm -rf ${version} &&
+                    unzip -qKo ${archive.archiveName} &&
+                    rm ${archive.archiveName}
+                """
 
-            def wildcardSymlinkCommand = """
-                cd ${remoteDocsDir} &&
-                if [ -e ${version.wildcardValue} ]; then
-                    currentWildcard=`readlink ${version.wildcardValue}`
-                else
-                    currentWildcard=-1
-                fi &&
-                if [[ ${version} > \$currentWildcard ]]; then
-                    rm -f ${version.wildcardValue} &&
-                    ln -s ${version} ${version.wildcardValue}
-                fi
-            """
+                def wildcardSymlinkCommand = """
+                    cd ${remoteDocsDir} &&
+                    if [ -e ${version.wildcardValue} ]; then
+                        currentWildcard=`readlink ${version.wildcardValue}`
+                    else
+                        currentWildcard=-1
+                    fi &&
+                    if [[ ${version} > \$currentWildcard ]]; then
+                        rm -f ${version.wildcardValue} &&
+                        ln -s ${version} ${version.wildcardValue}
+                    fi
+                """
 
-            def latestGASymlinkCommand = """
-                cd ${remoteDocsDir} &&
-                if [ -e latest-ga ]; then
-                    latestGa=`readlink latest-ga`
-                else
-                    latestGa=-1
-                fi &&
-                if [[ ${version} > \$latestGa ]]; then
-                    rm -f latest-ga &&
-                    ln -s ${version} latest-ga
-                fi
-            """
+                def latestGASymlinkCommand = """
+                    cd ${remoteDocsDir} &&
+                    if [ -e latest-ga ]; then
+                        latestGa=`readlink latest-ga`
+                    else
+                        latestGa=-1
+                    fi &&
+                    if [[ ${version} > \$latestGa ]]; then
+                        rm -f latest-ga &&
+                        ln -s ${version} latest-ga
+                    fi
+                """
 
-            println "Unpacking docs archive: ${unpackCommand}"
-            sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: unpackCommand)
-            if (version.releaseType != 'SNAPSHOT') {
-                println "Creating wildcard symlink: ${wildcardSymlinkCommand}"
-                sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: wildcardSymlinkCommand)
+                println "Unpacking docs archive: ${unpackCommand}"
+                sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: unpackCommand)
+                if (version.releaseType != 'SNAPSHOT') {
+                    println "Creating wildcard symlink: ${wildcardSymlinkCommand}"
+                    sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: wildcardSymlinkCommand)
+                }
+                if (version.releaseType == 'RELEASE') {
+                    println "Creating latest-ga symlink: ${latestGASymlinkCommand}"
+                    sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: latestGASymlinkCommand)
+                }
+                println "UPLOAD SUCCESSFUL - validate by visiting ${docsUrl}"
             }
-            if (version.releaseType == 'RELEASE') {
-                println "Creating latest-ga symlink: ${latestGASymlinkCommand}"
-                sshexec(host: sshHost, username: sshUsername, keyfile: sshPrivateKey, command: latestGASymlinkCommand)
-            }
-            println "UPLOAD SUCCESSFUL - validate by visiting ${docsUrl}"
         }
     }
 }
