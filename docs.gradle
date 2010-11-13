@@ -168,7 +168,7 @@ docsSpec = copySpec {
 
 task archive(type: Zip, dependsOn: [api, reference]) {
     group = "Documentation"
-    description = "Create a zip archive of reference and API documentation."
+    description = "Creates a zip archive of reference and API documentation."
 
     baseName = rootProject.name + '-docs'
 
