@@ -309,7 +309,6 @@ class DocbookFoPdf extends Docbook {
     }
 
     private File getPdfOutputFile(File foFile) {
-        String name = foFile.getAbsolutePath();
-        return new File(name.substring(0, name.length() - 2) + "pdf");
+        return new File(foFile.parent, this.project.rootProject.name + '-reference.pdf')
     }
 }
