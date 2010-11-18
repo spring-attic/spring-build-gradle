@@ -25,8 +25,7 @@
 task wrapper(type: Wrapper) {
     group = 'Buildmaster'
     description = "Generates gradlew and gradlew.bat bootstrap scripts"
-    gradleVersion = '0.9-20101111130126+0300'
-    urlRoot = 'http://gradle.artifactoryonline.com/gradle/distributions/gradle-snapshots'
+    gradleVersion = '0.9-rc-3'
     // place jar file and properties into a
     // subdirectory to avoid root dir clutter
     jarPath = 'buildSrc/wrapper'
