@@ -20,6 +20,18 @@
 // @author Chris Beams
 // -----------------------------------------------------------------------------
 
+buildscript {
+    repositories {
+        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
+    }
+    dependencies {
+        classpath group: 'org.springframework.build',
+                  name: 'org.springframework.build.aws.ant',
+                  version: '3.0.3.RELEASE'
+    }
+}
+
+
 // ensure that every project has been evaluated before this script
 // this allows us to look up tasks below and dereference dynamically
 // assigned properties like 'docsSpec' below
