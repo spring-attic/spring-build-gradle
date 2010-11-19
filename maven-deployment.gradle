@@ -139,6 +139,8 @@ task generatePom {
 
     generatedPomFileName = "pom.xml"
 
+    inputs.files(project.sourceSets.main.compileClasspath)
+
     // enable partial cleaning with `gradle cleanGeneratePom`
     outputs.files(generatedPomFileName)
 
