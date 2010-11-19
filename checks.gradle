@@ -30,7 +30,7 @@ task snapshotDependencyReport {
 
         javaprojects.each { project ->
             project.sourceSets.main.compileClasspath.allDependencies.each { dep ->
-                if (dep.version.endsWith('SNAPSHOT')) {
+                if (dep.version?.endsWith('SNAPSHOT')) {
                     if (snapshotDependencies[project] == null)
                         snapshotDependencies[project] = new ArrayList<Dependency>()
                     snapshotDependencies[project].add(dep)
