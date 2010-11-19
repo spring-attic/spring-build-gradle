@@ -92,7 +92,8 @@ uploadArchives {
 
         description += repositoryUrl
         configuration = configurations.deployerJars
-        s3credentials = [userName: s3AccessKey, passphrase: s3SecretAccessKey]
+        s3credentials = [userName: project.properties.s3AccessKey,
+                         passphrase: project.properties.s3SecretAccessKey]
         repository(url: repositoryUrl) { authentication(s3credentials) }
         snapshotRepository(url: repositoryUrl) { authentication(s3credentials) }
 
@@ -104,7 +105,7 @@ uploadArchives {
         // maven deployer and deploy to the maven sync repository filesystem
         // location. The SVN commit must be done manually after the build.
         repositories.mavenDeployer { deployer ->
-            repository(url: "file://${mavenSyncRepoDir}")
+            repository(url: "file://${project.properties.mavenSyncRepoDir}")
 
             configurePom(deployer.pom)
         }
