@@ -159,6 +159,7 @@ public class Docbook extends DefaultTask {
                 extractHighlightFiles(highlightingDir);
             }
 
+            transformer.setParameter("highlight.source", "1");
             transformer.setParameter("highlight.xslthl.config", new File(highlightingDir, "xslthl-config.xml").toURI().toURL());
 
             if (admonGraphicsPath != null) {
