@@ -144,7 +144,7 @@ docbookHtml.stylesheet = file('src/reference/resources/xsl/html-custom.xsl')
 docbookHtmlSingle.stylesheet = file('src/reference/resources/xsl/html-single-custom.xsl')
 docbookPdf.stylesheet = file('src/reference/resources/xsl/pdf-custom.xsl')
 def imagesDir = file('src/reference/resources/images');
-docbookPdf.admonGraphicsPath = "${imagesDir}/"
+docbookPdf.admonGraphicsPath = "${imagesDir}/admon/"
 
 
 /**
