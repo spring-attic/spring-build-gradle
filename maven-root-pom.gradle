@@ -32,6 +32,9 @@ task generatePom {
 
     generatedPomFileName = "pom.xml"
 
+    // ensure version changes in gradle.properties trigger regeneration of root pom
+    inputs.files(new File(project.rootProject.rootDir, Project.GRADLE_PROPERTIES))
+
     // enable partial cleaning with `gradle cleanGeneratePom`
     outputs.files(generatedPomFileName)
 
