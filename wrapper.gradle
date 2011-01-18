@@ -20,13 +20,14 @@
  * download and install gradle.
  *
  * @author Chris Beams
- * @see http://gradle.org/0.9-preview-3/docs/userguide/userguide_single.html#gradle_wrapper
+ * @see http://gradle.org/0.9.1/docs/userguide/userguide_single.html#gradle_wrapper
  */
 task wrapper(type: Wrapper) {
     group = 'Buildmaster'
     description = "Generates gradlew and gradlew.bat bootstrap scripts"
-    gradleVersion = '0.9'
+    gradleVersion = '0.9.1'
+    urlRoot='http://gradle.artifactoryonline.com/gradle/distributions'
     // place jar file and properties into a
     // subdirectory to avoid root dir clutter
-    jarFile = 'buildSrc/wrapper'
+    jarPath = 'buildSrc/wrapper'
 }
