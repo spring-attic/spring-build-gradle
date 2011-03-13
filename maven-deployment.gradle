@@ -157,6 +157,20 @@ task generatePom {
                 properties {
                     setProperty('project.build.sourceEncoding', 'UTF8')
                 }
+                // iterate through all repositories declared in the gradle
+                // script(s) and render each in the generated pom
+                repositories {
+                    project.repositories.each { repo ->
+                        if (repo.name == 'MavenRepo') {
+                            // do not include the Maven Central repository
+                            return
+                        }
+                        repository {
+                            id = repo.name
+                            url = repo.repository
+                        }
+                    }
+                }
                 build {
                     plugins {
                         plugin {
