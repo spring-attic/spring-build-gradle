@@ -167,7 +167,7 @@ task generatePom {
                         }
                         repository {
                             id = repo.name
-                            url = repo.repository
+                            url = repo.root
                         }
                     }
                 }
