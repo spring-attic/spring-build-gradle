@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
 
 buildscript {
     repositories {
-        mavenCentral()
-        mavenRepo name: 'Shibboleth Repo', urls: 'http://shibboleth.internet2.edu/downloads/maven2'
+        mavenRepo(name: 'SpringSource Plugin Repo',
+            urls: 'http://repository.springsource.org/repo').setChecksums('sha1')
     }
     dependencies {
         def fopDeps = ['org.apache.xmlgraphics:fop:0.95-1@jar',

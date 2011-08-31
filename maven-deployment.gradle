@@ -50,76 +50,12 @@ artifacts {
 
 
 /**
- * Deploy gradle-built artifacts to a remote maven repository. Overrides and
- * further customizes the 'uploadArchives' task contributed by the 'maven'
- * plugin.
- *
- * The repository that artifacts are deployed to is determined conditionally
- * based on the release type of the project version. Snapshot builds will
- * be deployed via s3 to the springframework maven snapshot repository;
- * milestone builds will happen via s3 as well; release builds will be deployed
- * to the local filesystem to be sync'd via sourceforge SVN and ultimately
- * deployed to maven central.
- *
- * Gradle will generate Maven poms on-the-fly during the deployment process.
- * This process is customized to add ASL license information, and for projects
- * that have the erlangLicense property set to true, the Erlang License will be
- * added to the pom as well.
- *
- * @author Chris Beams
- * @see 'mavenSyncRepoDir' in gradle.properties
- * @see 's3AccessKey' in gradle.properties
- * @see 's3SecretAccessKey' in gradle.properties
- * @see `gradle install` for deploying artifacts to the local .m2 cache
- * @see http://maven.apache.org/guides/mini/guide-central-repository-upload.html
- */
-uploadArchives {
-    group = 'Buildmaster'
-    description = "Does a maven deploy of archives artifacts to " // url appended below
-
-    // add a configuration with a classpath that includes our s3 maven deployer
-    configurations { deployerJars }
-    dependencies {
-        deployerJars "org.springframework.build.aws:org.springframework.build.aws.maven:3.0.0.RELEASE"
-    }
-
-    // bring up a deployer and push to the appropriate repo for this release type
-    // note that repository and snapshotRepository are the same - it doesn't matter
-    // if it is actually a BUILD-SNAPSHOT, the snapshotRepository will kick in,
-    // otherwise it is ignored.
-    repositories.mavenDeployer { deployer ->
-        def repositoryUrl = 's3://maven.springframework.org/' + version.releaseType.toString().toLowerCase()
-
-        description += repositoryUrl
-        configuration = configurations.deployerJars
-        s3credentials = [userName: project.properties.s3AccessKey,
-                         passphrase: project.properties.s3SecretAccessKey]
-        repository(url: repositoryUrl) { authentication(s3credentials) }
-        snapshotRepository(url: repositoryUrl) { authentication(s3credentials) }
-
-        configurePom(deployer.pom)
-    }
-
-    if (version.releaseType == 'RELEASE') {
-        // we're dealing with a GA release (RELEASE), so bring up a second
-        // maven deployer and deploy to the maven sync repository filesystem
-        // location. The SVN commit must be done manually after the build.
-        repositories.mavenDeployer { deployer ->
-            repository(url: "file://${project.properties.mavenSyncRepoDir}")
-
-            configurePom(deployer.pom)
-        }
-    }
-}
-
-
-/**
  * Install gradle-built artifacts to the local m2 maven cache.
  * Further customizes the 'install' task contributed by the 'maven' plugin.
  */
 install {
     group = 'Build'
-    description = "Does a maven install of archives artifacts to local m2 cache"
+    description = "Customizes the pom and installs artifacts to local m2 cache"
 
     configurePom(repositories.mavenInstaller.pom)
 }
