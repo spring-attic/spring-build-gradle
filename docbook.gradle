@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 buildscript {
     repositories {
         mavenCentral()
-        mavenRepo name: 'Shibboleth Repo', urls: 'http://shibboleth.internet2.edu/downloads/maven2'
+        mavenRepo name: 'Shibboleth Repo', urls: 'https://www.internet2.edu/products-services/trust-identity-middleware/shibboleth'
     }
     dependencies {
         def fopDeps = ['org.apache.xmlgraphics:fop:0.95-1@jar',
@@ -265,7 +265,7 @@ class DocbookHtml extends Docbook {
 class DocbookFoPdf extends Docbook {
 
     /**
-     * <a href="http://xmlgraphics.apache.org/fop/0.95/embedding.html#render">From the FOP usage guide</a>
+     * <a href="https://xmlgraphics.apache.org/fop/0.95/embedding.html#render">From the FOP usage guide</a>
      */
     @Override
     protected void postTransform(File foFile) {
