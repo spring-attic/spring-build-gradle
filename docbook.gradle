@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 buildscript {
     repositories {
-        mavenCentral()
+        maven { url 'https://repo.maven.apache.org/maven2/' }
         mavenRepo name: 'Shibboleth Repo', urls: 'http://shibboleth.internet2.edu/downloads/maven2'
     }
     dependencies {
