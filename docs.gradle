@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,7 @@ task build(dependsOn: assemble) {
  *
  * @author Chris Beams
  * @author Luke Taylor
- * @see http://gradle.org/0.9-rc-1/docs/javadoc/org/gradle/api/tasks/javadoc/Javadoc.html
+ * @see https://gradle.org/0.9-rc-1/docs/javadoc/org/gradle/api/tasks/javadoc/Javadoc.html
  */
  task api(type: Javadoc) {
     group = 'Documentation'
@@ -46,7 +46,7 @@ task build(dependsOn: assemble) {
     tmpDir = file("${buildDir}/api-work")
     optionsFile = file("${tmpDir}/apidocs/javadoc.options")
     options.stylesheetFile = file("${srcDir}/spring-javadoc.css")
-    options.links = ["http://static.springframework.org/spring/docs/3.0.x/javadoc-api"]
+    options.links = ["https://docs.spring.io/spring/docs/3.0.x/javadoc-api"]
     options.overview = "${srcDir}/overview.html"
     options.docFilesSubDirs = true
     title = "${rootProject.description} ${version} API"
@@ -85,7 +85,7 @@ task build(dependsOn: assemble) {
  * a feature not yet implemented, but on the Gradle roadmap.
  *
  * @author Chris Beams
- * @see http://jira.codehaus.org/browse/GRADLE-1026
+ * @see https://jira.codehaus.org/browse/GRADLE-1026
  */
 task preprocessDocbookSources {
     description = 'Expands ${...} variables within docbook sources.'
@@ -149,8 +149,8 @@ docbookPdf.admonGraphicsPath = "${imagesDir}/admon/"
 
 /**
  *
- * @see http://www.gradle.org/0.9-preview-3/docs/userguide/userguide_single.html#sec:copying_files
- * @see http://www.gradle.org/0.9-preview-3/docs/javadoc/org/gradle/api/file/CopySpec.html
+ * @see https://www.gradle.org/0.9-preview-3/docs/userguide/userguide_single.html#sec:copying_files
+ * @see https://www.gradle.org/0.9-preview-3/docs/javadoc/org/gradle/api/file/CopySpec.html
  */
 docsSpec = copySpec {
     into("${version}") {
